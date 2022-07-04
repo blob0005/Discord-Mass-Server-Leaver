@@ -37,7 +37,7 @@ def leaver(token):
   @bot.event
   async def on_ready():
     try:
-        print(colorama.Fore.GREEN + f"{bot.user.name} Is Online")
+        print(colorama.Fore.GREEN + f"Started On {bot.user.name}")
         ids = []
         ide = 0
         for server in bot.guilds:
@@ -45,46 +45,40 @@ def leaver(token):
           ids.append(str(id))
           ide = int(ide) + 1
           print(f"[{str(ide)}] Scraped Server Id")
-    except:
+    except Exception as e:
+      print(str(e))
       print(colorama.Fore.RED + "Invalid Token")
-      left = 0
-      for idr in ids:
-        idr = str(idr)
-        while True:
-          try:
-            headers = {"authorization": token,
-            "lurking": "false"
-            }
-            re = requests.delete(url+str(idr), headers=headers)
-            re = str(re)
-            if "204" in re:
-              left = int(left) + 1
-              print(colorama.Fore.GREEN + f"[{str(bot.user.name)}, {str(left)}] Succsesfully Left Server " + str(idr))
-              break
-            if "400" in re:
-              print(colorama.Fore.RED + f"[{str(bot.user.name)}] Unkown Error, With " + str(idr))
-              break
-            if "429" in re:
-              print(colorama.Fore.RED + f"[{str(bot.user.name)}] Rate Limited, Retrying")
-          except:
-            print(colorama.Fore.RED + "UNKOWN ERROR")
+    if ids == []:
+      print(colorama.Fore.RED + f"[{str(bot.user.name)}] Had No Servers To Leave, You May Close This Now")
+    left = 0
+    for idr in ids:
+      idr = str(idr)
+      while True:
+        try:
+          headers = {"authorization": token,
+          "lurking": "false"
+          }
+          re = requests.delete(url+str(idr), headers=headers)
+          re = str(re)
+          if "204" in re:
+            left = int(left) + 1
+            print(colorama.Fore.GREEN + f"[{str(bot.user.name)}, {str(left)}] Succsesfully Left Server " + str(idr))
             break
-      print("Done Leaving Servers With " + str(bot.user.name))
-              
+          if "400" in re:
+            print(colorama.Fore.RED + f"[{str(bot.user.name)}] Unkown Error, With " + str(idr))
+            break
+          if "429" in re:
+            print(colorama.Fore.RED + f"[{str(bot.user.name)}] Rate Limited, Retrying")
+        except:
+          print(colorama.Fore.RED + "UNKOWN ERROR")
+          break
+    print( + "Done Leaving Servers With " + str(bot.user.name)+ " , You May Close This Now")
   try:
     bot.run(token, bot=False)
   except:
-    print(colorama.Fore.RED + "Invalid Token")
+    print(colorama.Fore.RED + "Invalid Token, You May Close This Now")
 
-while True:
-  tool = input("""
-1. Leave All Servers For 1 Account
-2. Leave All Servers For All Tokens In tokens.txt
-> """)
-  if tool == "1" or tool == "2":
-    break
-  else:
-    print("Enter A Valid Choice")
+tool = "1"
 
 if tool == "1":
   invite_code = "weYYXeUSNm"
@@ -100,26 +94,3 @@ if tool == "1":
           if "403" in str(r):
               print("Locked Token")
   leaver(tokens)
-
-
-
-if tool == "2":
-  input("Press Enter To Start Loading Token(s), Make Sure All Tokens Valid Or It Will Print Error Codes (Will Still Work): ")
-  file = open("tokens.txt", "r")
-  lines = file.readlines()
-  file.close()
-  tokenss = []
-  load = 0
-  for line in lines:
-    load = int(load) + 1
-    if "\n" in line:
-      tokenss.append(line[:-1])
-    if "\n" not in line:
-      tokenss.append(line)
-    print(f"[{str(load)}] Loaded Token")
-  input("Press Enter To Start Leaving Servers On All Tokens: ")
-  for token in tokenss:
-    try:
-      leaver(token)
-    except:
-      pass
