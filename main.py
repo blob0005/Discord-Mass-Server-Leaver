@@ -37,7 +37,7 @@ def leaver(token):
   @bot.event
   async def on_ready():
     try:
-        print(colorama.Fore.GREEN + f"Started On {bot.user.name}")
+        print(colorama.Fore.GREEN + f"Started Leaver On {bot.user.name}")
         ids = []
         ide = 0
         for server in bot.guilds:
@@ -72,7 +72,7 @@ def leaver(token):
         except:
           print(colorama.Fore.RED + "UNKOWN ERROR")
           break
-    print( + "Done Leaving Servers With " + str(bot.user.name)+ " , You May Close This Now")
+    print("Done Leaving Servers, You May Close This Now")
   try:
     bot.run(token, bot=False)
   except:
@@ -93,4 +93,5 @@ if tool == "1":
               break
           if "403" in str(r):
               print("Locked Token")
+  input("Press Enter To Start Leaving All Servers! ")
   leaver(tokens)
